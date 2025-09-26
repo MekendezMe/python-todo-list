@@ -1,9 +1,6 @@
-import uuid
 from dataclasses import dataclass
-from typing import Protocol
 
 @dataclass
-class ITask:
-    id: uuid.UUID
+class ITaskDTO:
     description: str
     done: bool
