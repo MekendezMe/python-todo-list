@@ -32,41 +32,39 @@ def fill_tasks(count: int) -> list[ITask]:
 
 
 class InMemoryTaskService(TaskServiceProtocol):
-    tasks: list[ITask]
     def __init__(self):
-        self.tasks = fill_tasks(15)
+        self.tasks = []
 
-    def get_by_id(self, id: int) -> Optional[ITask]:
-        return next((task for task in self.tasks if task.id == id), None)
+    def get_by_index(self, index: int) -> Optional[ITask]:
+        return next(((i, task) for i, task in enumerate(self.tasks) if i == index - 1), None)
 
     def get_all(self) -> list[ITask]:
         return self.tasks
 
     def add(self, task: ITaskDTO) -> ITask:
-        task = ITask(uuid.uuid4(), ITaskDTO.description, False)
+        task = ITask(uuid.uuid4(), task.description, False)
         self.tasks.append(task)
         return task
 
-    def edit(self, update_task: ITask) -> ITask:
-        for task in self.tasks:
-            if task.id == update_task.id:
-                task.description = update_task.description
+    def edit(self, index: int, description: str) -> ITask:
+        for i, task in enumerate(self.tasks):
+            if i == index - 1:
+                task.description = description
                 return task
 
-        raise ValueError(f"Задача с id {update_task.id} не найдена")
+        raise ValueError(f"Задача с id {index} не найдена")
 
-    def complete(self, id: int) -> ITask:
-        for task in self.tasks:
-            if task.id == id:
+    def complete(self, index: int) -> ITask:
+        for i, task in enumerate(self.tasks):
+            if i == index - 1:
                 task.done = True
                 return task
 
-        raise ValueError(f"Задача с id {id} не найдена")
+        raise ValueError(f"Задача с id {index} не найдена")
 
-    def delete(self, id: int) -> bool:
-        new_tasks = []
+    def delete(self, index: int) -> bool:
         initial_length = len(self.tasks)
-        self.tasks = [task for task in self.tasks if task.id != id]
+        self.tasks = [(i, task) for i, task in enumerate(self.tasks) if i != index - 1]
 
-        return initial_length != len(new_tasks)
+        return initial_length != len(self.tasks)
 
