@@ -8,31 +8,6 @@ from interfaces.dtos.ITaskDTO import ITaskDTO
 from interfaces.task import ITask
 from interfaces.task_service_protocol import TaskServiceProtocol
 
-
-def fill_tasks(count: int) -> list[ITask]:
-    descriptions = [
-        "Купить продукты",
-        "Позвонить врачу",
-        "Написать отчёт по проекту",
-        "Сделать уборку в комнате",
-        "Сходить в спортзал",
-        "Приготовить ужин",
-        "Оплатить счета за коммунальные услуги",
-        "Отправить письмо коллеге",
-        "Забронировать билеты на поезд",
-        "Проверить почту",
-        "Сделать резервную копию данных",
-        "Погулять с собакой",
-        "Прочитать 20 страниц книги",
-        "Полить цветы",
-        "Записаться на курсы английского"
-    ]
-
-    tasks = [ITask(uuid.uuid4(), random.choice(descriptions), False) for _ in range(count)]
-
-    return tasks
-
-
 class InMemoryTaskService(TaskServiceProtocol):
     def __init__(self):
         self.tasks = []
@@ -75,4 +50,28 @@ class InMemoryTaskService(TaskServiceProtocol):
             del self.tasks[index - 1]
             return True
         return False
+
+def fill_tasks(count: int) -> list[ITask]:
+    descriptions = [
+        "Купить продукты",
+        "Позвонить врачу",
+        "Написать отчёт по проекту",
+        "Сделать уборку в комнате",
+        "Сходить в спортзал",
+        "Приготовить ужин",
+        "Оплатить счета за коммунальные услуги",
+        "Отправить письмо коллеге",
+        "Забронировать билеты на поезд",
+        "Проверить почту",
+        "Сделать резервную копию данных",
+        "Погулять с собакой",
+        "Прочитать 20 страниц книги",
+        "Полить цветы",
+        "Записаться на курсы английского"
+    ]
+
+    tasks = [ITask(uuid.uuid4(), random.choice(descriptions), False) for _ in range(count)]
+
+    return tasks
+
 

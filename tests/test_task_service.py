@@ -2,11 +2,13 @@ import uuid
 
 import pytest
 
+from exceptions.description_not_filled_exception import DescriptionNotFilledException
+from exceptions.task_not_found_exception import TaskNotFoundException
 from interfaces.dtos.ITaskDTO import ITaskDTO
 from interfaces.task import ITask
 from services.task_service import InMemoryTaskService
 
-# Positive TESTS
+# Positive cases
 
 @pytest.fixture
 def task_service():
@@ -49,3 +51,22 @@ def test_complete(task_service):
     first_task = task_service.add(ITaskDTO(description="Выполнена"))
     actual_task = task_service.complete(index=1)
     assert actual_task.done == expected_task.done
+
+# Negative cases
+
+def test_get_by_incorrect_index(task_service):
+    actual_task = task_service.get_by_index(index=2)
+    assert actual_task is None
+
+def test_add_with_empty_description(task_service):
+    with pytest.raises(DescriptionNotFilledException):
+        task_service.add(ITaskDTO(description=""))
+
+def test_edit_with_incorrect_index(task_service):
+    with pytest.raises(TaskNotFoundException):
+        task_service.edit(index=4, description="ewqe")
+
+def test_complete_with_incorrect_index(task_service):
+    with pytest.raises(TaskNotFoundException):
+        task_service.complete(index=5)
+
