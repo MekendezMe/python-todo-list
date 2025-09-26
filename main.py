@@ -1,5 +1,3 @@
-from pydoc import describe
-
 from interfaces.dtos.ITaskDTO import ITaskDTO
 from interfaces.task import ITask
 from services.task_service import InMemoryTaskService
@@ -19,7 +17,7 @@ def todo_start():
             print("Описание должно быть заполнено")
             return
 
-        task = task_service.add(task=ITaskDTO(description=description, done=False))
+        task = task_service.add(task=ITaskDTO(description=description))
         print(f"Задача с id {task.id} успешно создана")
     elif user_choice == 2:
         tasks = task_service.get_all()
@@ -35,7 +33,7 @@ def todo_start():
         except ValueError:
             print("Некорректно введен номер задачи")
             raise
-        index, task = task_service.get_by_index(index)
+        task = task_service.get_by_index(index)
         if task is None:
             print("Задача с данным номером не найдена")
             return

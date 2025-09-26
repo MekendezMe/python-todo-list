@@ -1,9 +1,10 @@
 import uuid
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Protocol, Optional
+
 
 @dataclass
 class ITask:
     id: uuid.UUID
     description: str
-    done: bool
+    done: Optional[bool] = False

@@ -36,17 +36,23 @@ class InMemoryTaskService(TaskServiceProtocol):
         self.tasks = []
 
     def get_by_index(self, index: int) -> Optional[ITask]:
-        return next(((i, task) for i, task in enumerate(self.tasks) if i == index - 1), None)
+        return self.tasks[index - 1] if 0 < index <= len(self.tasks) else None
 
     def get_all(self) -> list[ITask]:
         return self.tasks
 
     def add(self, task: ITaskDTO) -> ITask:
+        if len(task.description) == 0:
+            raise ValueError("Описание должно быть заполнено")
+
         task = ITask(uuid.uuid4(), task.description, False)
         self.tasks.append(task)
         return task
 
     def edit(self, index: int, description: str) -> ITask:
+        if len(description) == 0:
+            raise ValueError("Описание должно быть заполнено")
+
         for i, task in enumerate(self.tasks):
             if i == index - 1:
                 task.description = description
@@ -63,8 +69,8 @@ class InMemoryTaskService(TaskServiceProtocol):
         raise ValueError(f"Задача с id {index} не найдена")
 
     def delete(self, index: int) -> bool:
-        initial_length = len(self.tasks)
-        self.tasks = [(i, task) for i, task in enumerate(self.tasks) if i != index - 1]
-
-        return initial_length != len(self.tasks)
+        if 0 < index <= len(self.tasks):
+            del self.tasks[index - 1]
+            return True
+        return False
 

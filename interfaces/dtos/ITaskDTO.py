@@ -1,6 +1,8 @@
 from dataclasses import dataclass
+from typing import Optional
+
 
 @dataclass
 class ITaskDTO:
     description: str
-    done: bool
+    done: Optional[bool] = False
